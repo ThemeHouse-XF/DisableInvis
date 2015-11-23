@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addon addon_id="ThemeHouse_DisableInvis" title="[⌂] Disable Invisible Status" version_string="1.0.4" version_id="1447261019" url="http://xf.themehouse.io/" install_callback_class="ThemeHouse_Install" install_callback_method="install" uninstall_callback_class="ThemeHouse_Install" uninstall_callback_method="uninstall">
+  <admin_navigation/>
+  <admin_permissions/>
+  <admin_style_properties/>
+  <admin_templates/>
+  <admin_template_modifications/>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="controller_pre_dispatch" execute_order="10" callback_class="ThemeHouse_Listener_ControllerPreDispatch" callback_method="controllerPreDispatch" active="1" hint="" description=""/>
+    <listener event_id="file_health_check" execute_order="10" callback_class="ThemeHouse_DisableInvis_Listener_FileHealthCheck" callback_method="fileHealthCheck" active="1" hint="" description=""/>
+    <listener event_id="init_dependencies" execute_order="10" callback_class="ThemeHouse_Listener_InitDependencies" callback_method="initDependencies" active="1" hint="" description=""/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_DisableInvis_Listener_LoadClass" callback_method="loadClassController" active="0" hint="XenForo_ControllerPublic_Account" description="XenForo_ControllerPublic_Account (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="ThemeHouse_DisableInvis_Listener_LoadClass" callback_method="loadClassController" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates/>
+  <email_template_modifications/>
+  <optiongroups/>
+  <permissions>
+    <permission_groups/>
+    <permissions>
+      <permission permission_group_id="general" permission_id="editVisibility" permission_type="flag" default_value="unset" interface_group_id="generalPermissions" display_order="20000"/>
+    </permissions>
+    <interface_groups/>
+  </permissions>
+  <phrases>
+    <phrase title="permission_general_editVisibility" version_id="1379516150" version_string="1.0.0"><![CDATA[Edit online visibility]]></phrase>
+  </phrases>
+  <route_prefixes/>
+  <style_properties/>
+  <templates/>
+  <public_template_modifications>
+    <modification template="account_preferences" modification_key="th_accountPreferences1.4+_disableInvisble" description="Removes option to not show online status from account preferences. XF 1.4+" execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#(<li>\s*<label for="ctrl_visible"><input type="checkbox" name="visible".*</li>)#Us]]></find>
+      <replace><![CDATA[<xen:if is="{$canEditVisibility}">
+${0}
+<xen:else />
+<input type="hidden" name="visible" value="{$visitor.visible}" />
+<input type="hidden" name="activity_visible" value="{$visitor.activity_visible}" />
+</xen:if>]]></replace>
+    </modification>
+    <modification template="account_preferences" modification_key="th_accountPreferences_disableInvisble" description="Removes option to not show online status from account preferences." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#<li><label><input type="checkbox" name="visible".*</li>#Us]]></find>
+      <replace><![CDATA[<xen:if is="{$canEditVisibility}">
+${0}
+</xen:if>]]></replace>
+    </modification>
+    <modification template="account_privacy" modification_key="th_accountPrivacy_disableInvisble" description="Removes option to not show online status from account privacy settings." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#<dl class="ctrlUnit surplusLabel">\s*<dt><label>{xen:phrase activity_display}:</label></dt>.*</dl>#Us]]></find>
+      <replace><![CDATA[<xen:if is="{$canEditVisibility}">
+${0}
+<xen:else />
+<input type="hidden" name="visible" value="{$visitor.visible}" />
+<input type="hidden" name="activity_visible" value="{$visitor.activity_visible}" />
+</xen:if>]]></replace>
+    </modification>
+    <modification template="footer" modification_key="th_copyrightNotice_disableInvis" description="Copyright notice for [⌂] Disable Invisible Status" execution_order="1" enabled="1" action="callback">
+      <find><![CDATA[/{xen:phrase (?:xenforo|extra)_copyright}/]]></find>
+      <replace><![CDATA[ThemeHouse_Listener_InitDependencies::copyrightNotice]]></replace>
+    </modification>
+    <modification template="footer" modification_key="th_copyrightNotice_disableInvisible" description="Copyright notice for Disable Invisible Status by ThemeHouse" execution_order="1" enabled="1" action="callback">
+      <find><![CDATA[/{xen:phrase (?:xenforo|extra)_copyright}/]]></find>
+      <replace><![CDATA[ThemeHouse_Listener_InitDependencies::copyrightNotice]]></replace>
+    </modification>
+    <modification template="navigation_visitor_tab" modification_key="th_navigationVisitorTab_disableInvisble" description="Removes option to not show online status from visitor navigation drop down." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#<li>\s*<form action="{xen:link account/toggle-visibility}".*</form>\s*</li>#Us]]></find>
+      <replace><![CDATA[<xen:if is="{$visitor.permissions.general.editVisibility}">
+${0}
+</xen:if>]]></replace>
+    </modification>
+    <modification template="uix_visitorTabs" modification_key="th_uixVisitorTabs_disableinvisible" description="Removes option to not show online status from visitor navigation drop down. UIX compatibility" execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#<li>\s*<form action="{xen:link account/toggle-visibility}".*</form>\s*</li>#Us]]></find>
+      <replace><![CDATA[<xen:if is="{$visitor.permissions.general.editVisibility}">
+${0}
+</xen:if>]]></replace>
+    </modification>
+  </public_template_modifications>
+  <bb_code_media_sites/>
+  <bb_codes/>
+</addon>
